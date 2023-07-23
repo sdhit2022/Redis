@@ -13,5 +13,5 @@ public partial class Pobject
 
     public decimal Decimal { get; set; }
 
-    public DateOnly Date { get; set; }
+    public DateTime Date { get; set; }
 }

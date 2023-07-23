@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataBase_Test.PostgreSQL;
 
-public partial class PostgresTestDbContext : DbContext,IPostgresTestDbContext
+public partial class PostgresContext : DbContext,IPostgresContext
 {
-    public PostgresTestDbContext()
+    public PostgresContext()
     {
     }
 
-    public PostgresTestDbContext(DbContextOptions<PostgresTestDbContext> options)
+    public PostgresContext(DbContextOptions<PostgresContext> options)
         : base(options)
     {
     }
@@ -32,6 +32,7 @@ public partial class PostgresTestDbContext : DbContext,IPostgresTestDbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
+            entity.Property(e => e.Date).HasColumnType("timestamp without time zone");
         });
 
         OnModelCreatingPartial(modelBuilder);

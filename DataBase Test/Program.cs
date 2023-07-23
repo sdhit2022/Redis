@@ -10,10 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddTransient<ISQLContext, SQLContext>();
 builder.Services.AddTransient<ITestDbContext, TestDbContext>();
-builder.Services.AddTransient<IPostgresTestDbContext, PostgresTestDbContext>();
+builder.Services.AddTransient<IPostgresContext, PostgresContext>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ISqlService,SqlService>();
 builder.Services.AddScoped<IMySqlService,MySqlService>();
+builder.Services.AddScoped<IPostgreService, PostgreService>();
 
 
 
@@ -28,7 +29,7 @@ builder.Services.AddDbContext<SQLContext>(
 builder.Services.AddTransient<MySqlConnection>(_ =>
     new MySqlConnection(builder.Configuration.GetConnectionString("MySQL")));
 
-builder.Services.AddDbContext<PostgresTestDbContext>(options =>
+builder.Services.AddDbContext<PostgresContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("PastgeSQL")));
 
 var app = builder.Build();
