@@ -1,46 +1,49 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace DataBase_Test.SQL
+namespace DataBase_Test.MySQL
 {
-    public interface ISqlService
+    public interface IMySqlService
     {
         double Delete();
         double Insert();
         double Update();
         double GetAll();
-
     }
 
-    public class SqlService : ISqlService
+    public class MySqlService : IMySqlService
     {
-        private readonly ISQLContext _context;
-        public SqlService(ISQLContext context)
+        public readonly ITestDbContext _context;
+        public MySqlService(ITestDbContext context) { _context = context; }
+
+        public double Delete()
         {
-            _context= context;
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            _context.Objects.FromSql($"TRUNCATE TABLE Object");
+            _context.SaveChanges();
+            watch.Stop();
+            return watch.ElapsedMilliseconds;
         }
 
         public double GetAll()
         {
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
-            var reult= _context.Objects.ToList();
+            var reult = _context.Objects.ToList();
             watch.Stop();
             return watch.ElapsedMilliseconds;
-
         }
 
         public double Insert()
         {
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
-            var list=new List<Object>();
-            for(int i = 0; i < 100; i++)
+            var list = new List<Object>();
+            for (int i = 0; i < 100; i++)
             {
                 var obj = new Object
                 {
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid().ToString(),
                     String = "Late edit, there's something else to know : You can't run Scaffold-DbContext against",
                     Date = DateTime.Now,
                     Decimal = new decimal(),
@@ -57,23 +60,13 @@ namespace DataBase_Test.SQL
 
         public double Update()
         {
-            var watch =new System.Diagnostics.Stopwatch();
+            var watch = new System.Diagnostics.Stopwatch();
             watch.Start();
             List<Object> list = new List<Object>();
             list = _context.Objects.Where(x => x.String.Equals("Late edit, there's something else to know : You can't run Scaffold-DbContext against")).ToList();
-            
-            list.ForEach(x=>x.Date = DateTime.Now);
-            _context.Objects.UpdateRange(list);
-            _context.SaveChanges();
-            watch.Stop();
-            return watch.ElapsedMilliseconds;
-        }
 
-        public double Delete()
-        {
-            var watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-            _context.Objects.FromSql($"delete from Object");
+            list.ForEach(x => x.Date = DateTime.Now);
+            _context.Objects.UpdateRange(list);
             _context.SaveChanges();
             watch.Stop();
             return watch.ElapsedMilliseconds;
