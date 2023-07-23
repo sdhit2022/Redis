@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Result</h1>
+</div>
+<h2>
+    SQL_Insert: @ViewData["SQL_Insert"] ms
+<br />
+    SQL_Update : @ViewData["SQL_Update"] ms
+    <br />
+    SQL_Select : @ViewData["SQL_Select"] ms
+</h2>
