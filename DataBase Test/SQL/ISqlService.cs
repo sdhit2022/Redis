@@ -1,15 +1,18 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataBase_Test.Common;
+using DataBase_Test.PostgreSQL;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Diagnostics;
 
 namespace DataBase_Test.SQL
 {
     public interface ISqlService
     {
-        double Delete();
-        double Insert();
-        double Update();
-        double GetAll();
+        Result Delete();
+        Result Insert();
+        Result Update();
+        Result GetAll();
 
     }
 
@@ -21,22 +24,27 @@ namespace DataBase_Test.SQL
             _context= context;
         }
 
-        public double GetAll()
+        public Result GetAll()
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-            var reult= _context.Objects.ToList();
-            watch.Stop();
-            return watch.ElapsedMilliseconds;
+            var time = select().Result;
+            Process currentProcess = Process.GetProcessById(18784);
+            var RamUsage = currentProcess.WorkingSet64;
+            var Cpu = currentProcess.TotalProcessorTime;
+            var result = new Result
+            {
+                Time = time,
+                Memory = RamUsage,
+                Cpu = Cpu
+            };
+            return result;
 
         }
 
-        public double Insert()
+        public Result Insert()
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-            var list=new List<Object>();
-            for(int i = 0; i < 100; i++)
+
+            var list = new List<Object>();
+            for (int i = 0; i < 100; i++)
             {
                 var obj = new Object
                 {
@@ -49,34 +57,128 @@ namespace DataBase_Test.SQL
                 list.Add(obj);
                 _context.Objects.Add(obj);
             }
-            //_context.Objects.AddRange(list);
-            _context.SaveChanges();
-            watch.Stop();
-            return watch.ElapsedMilliseconds;
+
+            var time = save().Result;
+
+            Process currentProcess = Process.GetProcessById(18784);
+            var RamUsage = currentProcess.WorkingSet64;
+            var cpu = currentProcess.TotalProcessorTime;
+            var result = new Result
+            {
+                Time = time,
+                Memory = RamUsage,
+                Cpu = cpu
+            };
+            return result;
+
         }
 
-        public double Update()
+        public Result Update()
         {
-            var watch =new System.Diagnostics.Stopwatch();
-            watch.Start();
-            List<Object> list = new List<Object>();
-            list = _context.Objects.Where(x => x.String.Equals("Late edit, there's something else to know : You can't run Scaffold-DbContext against")).ToList();
-            
-            list.ForEach(x=>x.Date = DateTime.Now);
-            _context.Objects.UpdateRange(list);
-            _context.SaveChanges();
-            watch.Stop();
-            return watch.ElapsedMilliseconds;
+            var time = update().Result;
+            Process currentProcess = Process.GetProcessById(18784);
+            var RamUsage = currentProcess.WorkingSet64;
+            var Cpu = currentProcess.TotalProcessorTime;
+            var result = new Result
+            {
+                Time = time,
+                Memory = RamUsage,
+                Cpu = Cpu
+            };
+            return result;
         }
 
-        public double Delete()
+        public Result Delete()
         {
-            var watch = new System.Diagnostics.Stopwatch();
-            watch.Start();
-            _context.Objects.FromSql($"delete from Object");
-            _context.SaveChanges();
-            watch.Stop();
-            return watch.ElapsedMilliseconds;
+            var time = delete().Result;
+            Process currentProcess = Process.GetProcessById(18784);
+            var RamUsage = currentProcess.WorkingSet64;
+            var Cpu = currentProcess.TotalProcessorTime;
+            var result = new Result
+            {
+                Time = time,
+                Memory = RamUsage,
+                Cpu = Cpu
+            };
+            return result;
+        }
+
+        //  Tasks
+        public async Task<double> save()
+        {
+            long result = 0;
+            await Task.Run(() =>
+            {
+
+
+                var watch = new Stopwatch();
+                watch.Start();
+                _context.SaveChanges();
+                watch.Stop();
+
+
+                result = watch.ElapsedMilliseconds;
+
+
+            });
+
+            return result;
+        }
+        public async Task<double> select()
+        {
+            long result = 0;
+            await Task.Run(() =>
+            {
+
+
+                var watch = new Stopwatch();
+                watch.Start();
+                var reult = _context.Objects.ToList();
+                watch.Stop();
+                result = watch.ElapsedMilliseconds;
+
+
+            });
+
+            return result;
+        }
+        public async Task<double> update()
+        {
+            long result = 0;
+            await Task.Run(() =>
+            {
+                var watch = new Stopwatch();
+                watch.Start();
+                List<Object> list = new List<Object>();
+                list = _context.Objects.Where(x => x.String.Equals("Late edit, there's something else to know : You can't run Scaffold-DbContext against")).ToList();
+
+                list.ForEach(x => x.Date = DateTime.Now);
+                _context.Objects.UpdateRange(list);
+                _context.SaveChanges();
+                watch.Stop();
+                result = watch.ElapsedMilliseconds;
+
+
+            });
+
+            return result;
+        }
+        public async Task<double> delete()
+        {
+            long result = 0;
+            await Task.Run(() =>
+            {
+                var watch = new Stopwatch();
+                watch.Start();
+                _context.Objects.FromSql($"delete from Object");
+                _context.SaveChanges();
+                watch.Stop();
+                result = watch.ElapsedMilliseconds;
+
+
+            });
+
+            return result;
         }
     }
 }

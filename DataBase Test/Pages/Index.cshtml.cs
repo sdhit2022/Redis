@@ -5,6 +5,8 @@ using DataBase_Test.SQL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
+using System.Net;
 
 namespace DataBase_Test.Pages
 {
@@ -15,7 +17,7 @@ namespace DataBase_Test.Pages
         private readonly IMySqlService _mySqlService;
         private readonly IPostgreService _postgreService;
         public List<Table> Tables { get; set; }
-
+        public Result ins, del, upd, sel;
 
         public IndexModel(ILogger<IndexModel> logger,ISqlService service,IMySqlService mySqlService,
             IPostgreService postgreService)
@@ -29,36 +31,58 @@ namespace DataBase_Test.Pages
         public void OnGet()
         {
             Tables = new List<Table>();
-            // ---------------  SQL --------------
+            var i = _sqlService.Delete();
+            //// ---------------  SQL --------------
+
+            ins = _sqlService.Insert();
+            del = _sqlService.Insert();
+            upd = _sqlService.Insert();
+            sel = _sqlService.Insert();
+
+
+
             Tables.Add(new Table
             {
                 DBName = "SQL",
-                Delete = _sqlService.Delete(),
-                Insert = _sqlService.Insert(),
-                Update = _sqlService.Update(),
-                Select = _sqlService.GetAll()
-               
+                Insert = ins.Time,
+                Update = upd.Time,
+                Select = sel.Time,
+                Delete = del.Time,
+
+
             });
 
-            // --------------- MySQL --------------
-            Tables.Add(new Table
-            {
-                DBName = "MySQL",
-                Delete = _mySqlService.Delete(),
-                Insert = _mySqlService.Insert(),
-                Update = _mySqlService.Update(),
-                Select = _mySqlService.GetAll()
-            });
+           
+            //// --------------- MySQL --------------
+            //i = _mySqlService.Delete();
+            //Tables.Add(new Table
+            //{
+            //    DBName = "MySQL",
+            //    Insert = _mySqlService.Insert(),
+            //    Update = _mySqlService.Update(),
+            //    Select = _mySqlService.GetAll(),
+            //    Delete = _mySqlService.Delete(),
+            //});
             // _______________ PostgreSQL -------------
-            Tables.Add(new Table
-            {
-                DBName = "PostgreSQL",
-                Delete = _postgreService.Delete(),
-                Insert = _postgreService.Insert(),
-                Update = _postgreService.Update(),
-                Select = _postgreService.GetAll()         
-            });
+            // i = _postgreService.Delete();
 
+            //Tables.Add(new Table
+            //{
+            //    DBName = "PostgreSQL",
+            //    Insert = _postgreService.Insert(),
+            //    Update = _postgreService.Update(),
+            //    Select = _postgreService.GetAll(),
+            //    Delete = _postgreService.Delete(),
+
+            //});
+
+
+        }
+        public static  void sql()
+        {
+        }
+        public static void sqlRam()
+        {
 
         }
     }
