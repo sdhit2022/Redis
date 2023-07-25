@@ -7,6 +7,9 @@
         public double Update { get; set; }
         public double Select { get; set; }
         public double Delete { get; set; }
+        public List<DBusage> Usage { get; set; }
 
     }
+
+  
 }

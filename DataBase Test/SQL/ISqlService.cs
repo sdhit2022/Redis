@@ -1,9 +1,8 @@
 ﻿using DataBase_Test.Common;
-using DataBase_Test.PostgreSQL;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Diagnostics;
+using System.Threading;
 
 namespace DataBase_Test.SQL
 {
@@ -22,19 +21,23 @@ namespace DataBase_Test.SQL
         public SqlService(ISQLContext context)
         {
             _context= context;
+            _context.Database.SetCommandTimeout(86000);
+
         }
 
         public Result GetAll()
         {
-            var time = select().Result;
-            Process currentProcess = Process.GetProcessById(18784);
+            var time = select();
+            Process currentProcess = Process.GetProcessById(10924);
             var RamUsage = currentProcess.WorkingSet64;
             var Cpu = currentProcess.TotalProcessorTime;
+             
+            //PerformanceCounter system_cpu_usage = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             var result = new Result
             {
-                Time = time,
+                Time = time.Result,
                 Memory = RamUsage,
-                Cpu = Cpu
+               //  // Cpu = Cpu
             };
             return result;
 
@@ -44,7 +47,7 @@ namespace DataBase_Test.SQL
         {
 
             var list = new List<Object>();
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var obj = new Object
                 {
@@ -58,16 +61,16 @@ namespace DataBase_Test.SQL
                 _context.Objects.Add(obj);
             }
 
-            var time = save().Result;
+            var time = save();
 
-            Process currentProcess = Process.GetProcessById(18784);
+            Process currentProcess = Process.GetProcessById(10924);
             var RamUsage = currentProcess.WorkingSet64;
             var cpu = currentProcess.TotalProcessorTime;
             var result = new Result
             {
-                Time = time,
+                Time = time.Result,
                 Memory = RamUsage,
-                Cpu = cpu
+                 // Cpu = Cpu
             };
             return result;
 
@@ -75,30 +78,30 @@ namespace DataBase_Test.SQL
 
         public Result Update()
         {
-            var time = update().Result;
-            Process currentProcess = Process.GetProcessById(18784);
+            var time = update();
+            Process currentProcess = Process.GetProcessById(10924);
             var RamUsage = currentProcess.WorkingSet64;
             var Cpu = currentProcess.TotalProcessorTime;
             var result = new Result
             {
-                Time = time,
+                Time = time.Result,
                 Memory = RamUsage,
-                Cpu = Cpu
+                 // Cpu = Cpu
             };
             return result;
         }
 
         public Result Delete()
         {
-            var time = delete().Result;
-            Process currentProcess = Process.GetProcessById(18784);
+            var time = delete();
+            Process currentProcess = Process.GetProcessById(10924);
             var RamUsage = currentProcess.WorkingSet64;
             var Cpu = currentProcess.TotalProcessorTime;
             var result = new Result
             {
-                Time = time,
+                Time = time.Result,
                 Memory = RamUsage,
-                Cpu = Cpu
+                 // Cpu = Cpu
             };
             return result;
         }
@@ -153,6 +156,7 @@ namespace DataBase_Test.SQL
                 list = _context.Objects.Where(x => x.String.Equals("Late edit, there's something else to know : You can't run Scaffold-DbContext against")).ToList();
 
                 list.ForEach(x => x.Date = DateTime.Now);
+                //_context.Database.SetCommandTimeout(1);
                 _context.Objects.UpdateRange(list);
                 _context.SaveChanges();
                 watch.Stop();

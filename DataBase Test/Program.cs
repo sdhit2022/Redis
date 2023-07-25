@@ -22,11 +22,12 @@ builder.Services.AddControllers();
 
 
 builder.Services.AddDbContext<SQLContext>(
-        options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQL")));
+        options => options.UseSqlServer(builder.Configuration.GetConnectionString("SQL"),
+        sqlServerOptions => sqlServerOptions.CommandTimeout(120)));
 
 //builder.Services.AddDbContext<TestDbContext>(_ =>
 //    new MySqlConnection(builder.Configuration.GetConnectionString("MySQL")));
-builder.Services.AddTransient<MySqlConnection>(_ =>
+builder.Services.AddTransient(_ =>
     new MySqlConnection(builder.Configuration.GetConnectionString("MySQL")));
 
 builder.Services.AddDbContext<PostgresContext>(options =>

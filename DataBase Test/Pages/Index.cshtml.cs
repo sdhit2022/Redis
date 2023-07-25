@@ -17,7 +17,9 @@ namespace DataBase_Test.Pages
         private readonly IMySqlService _mySqlService;
         private readonly IPostgreService _postgreService;
         public List<Table> Tables { get; set; }
-        public Result ins, del, upd, sel;
+        public List<DBusage> Usage;
+
+        
 
         public IndexModel(ILogger<IndexModel> logger,ISqlService service,IMySqlService mySqlService,
             IPostgreService postgreService)
@@ -32,14 +34,19 @@ namespace DataBase_Test.Pages
         {
             Tables = new List<Table>();
             var i = _sqlService.Delete();
+            Result ins, del, upd, sel;
+
             //// ---------------  SQL --------------
-
+            Usage = new List<DBusage>();
             ins = _sqlService.Insert();
-            del = _sqlService.Insert();
-            upd = _sqlService.Insert();
-            sel = _sqlService.Insert();
+            upd = _sqlService.Update();
+            sel = _sqlService.GetAll();
+            del = _sqlService.Delete();
 
-
+            Usage.Add(setUsage(ins,"Insert"));
+            Usage.Add(setUsage(upd,"Update"));
+            Usage.Add(setUsage(sel,"Select"));
+            Usage.Add(setUsage(del,"Delete"));
 
             Tables.Add(new Table
             {
@@ -48,42 +55,73 @@ namespace DataBase_Test.Pages
                 Update = upd.Time,
                 Select = sel.Time,
                 Delete = del.Time,
-
-
+                Usage=Usage
             });
 
-           
+
             //// --------------- MySQL --------------
-            //i = _mySqlService.Delete();
-            //Tables.Add(new Table
-            //{
-            //    DBName = "MySQL",
-            //    Insert = _mySqlService.Insert(),
-            //    Update = _mySqlService.Update(),
-            //    Select = _mySqlService.GetAll(),
-            //    Delete = _mySqlService.Delete(),
-            //});
+            Usage = new List<DBusage>();
+             i = _mySqlService.Delete();
+
+            ins = _mySqlService.Insert();
+            upd = _mySqlService.Update();
+            sel = _mySqlService.GetAll();
+            del = _mySqlService.Delete();
+
+            Usage.Add(setUsage(ins, "Insert"));
+            Usage.Add(setUsage(upd, "Update"));
+            Usage.Add(setUsage(sel, "Select"));
+            Usage.Add(setUsage(del, "Delete"));
+
+            Tables.Add(new Table
+            {
+                DBName = "MySQL",
+                Insert = ins.Time,
+                Update = upd.Time,
+                Select = sel.Time,
+                Delete = del.Time,
+                Usage = Usage
+            });
+
             // _______________ PostgreSQL -------------
-            // i = _postgreService.Delete();
+            Usage = new List<DBusage>();
+            i = _postgreService.Delete();
 
-            //Tables.Add(new Table
-            //{
-            //    DBName = "PostgreSQL",
-            //    Insert = _postgreService.Insert(),
-            //    Update = _postgreService.Update(),
-            //    Select = _postgreService.GetAll(),
-            //    Delete = _postgreService.Delete(),
+            ins = _postgreService.Insert();
+            upd = _postgreService.Update();
+            sel = _postgreService.GetAll();
+            del = _postgreService.Delete();
 
-            //});
+            Usage.Add(setUsage(ins, "Insert"));
+            Usage.Add(setUsage(upd, "Update"));
+            Usage.Add(setUsage(sel, "Select"));
+            Usage.Add(setUsage(del, "Delete"));
+
+            Tables.Add(new Table
+            {
+                DBName = "PostgreSQL",
+                Insert = ins.Time,
+                Update = upd.Time,
+                Select = sel.Time,
+                Delete = del.Time,
+                Usage = Usage
+            });
+
 
 
         }
-        public static  void sql()
+        public DBusage setUsage(Result result,string name)
         {
+            var usage=new DBusage
+            {
+                DBoperation = name,
+                //Cpu = result.Cpu,
+                Memory = result.Memory/ 1024 ^ 2,
+                Time = result.Time
+            };
+             return usage;
         }
-        public static void sqlRam()
-        {
-
-        }
+     
+        
     }
 }
