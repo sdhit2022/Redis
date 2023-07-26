@@ -9,7 +9,7 @@ public partial class Object
 
     public string String { get; set; } = null!;
 
-    public decimal Decimal { get; set; }
+    public decimal? Decimal { get; set; }
 
     public DateTime Date { get; set; }
 

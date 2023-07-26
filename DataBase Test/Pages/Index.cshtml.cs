@@ -18,6 +18,7 @@ namespace DataBase_Test.Pages
         private readonly IPostgreService _postgreService;
         public List<Table> Tables { get; set; }
         public List<DBusage> Usage;
+        public int n=100000;
 
         
 
@@ -35,18 +36,17 @@ namespace DataBase_Test.Pages
             Tables = new List<Table>();
             var i = _sqlService.Delete();
             Result ins, del, upd, sel;
-
-            //// ---------------  SQL --------------
+            ////// ---------------  SQL --------------
             Usage = new List<DBusage>();
-            ins = _sqlService.Insert();
+            ins = _sqlService.Insert(n);
             upd = _sqlService.Update();
             sel = _sqlService.GetAll();
             del = _sqlService.Delete();
 
-            Usage.Add(setUsage(ins,"Insert"));
-            Usage.Add(setUsage(upd,"Update"));
-            Usage.Add(setUsage(sel,"Select"));
-            Usage.Add(setUsage(del,"Delete"));
+            Usage.Add(setUsage(ins, "Insert"));
+            Usage.Add(setUsage(upd, "Update"));
+            Usage.Add(setUsage(sel, "Select"));
+            Usage.Add(setUsage(del, "Delete"));
 
             Tables.Add(new Table
             {
@@ -55,7 +55,7 @@ namespace DataBase_Test.Pages
                 Update = upd.Time,
                 Select = sel.Time,
                 Delete = del.Time,
-                Usage=Usage
+                Usage = Usage
             });
 
 
@@ -63,7 +63,7 @@ namespace DataBase_Test.Pages
             Usage = new List<DBusage>();
              i = _mySqlService.Delete();
 
-            ins = _mySqlService.Insert();
+            ins = _mySqlService.Insert(n);
             upd = _mySqlService.Update();
             sel = _mySqlService.GetAll();
             del = _mySqlService.Delete();
@@ -87,7 +87,7 @@ namespace DataBase_Test.Pages
             Usage = new List<DBusage>();
             i = _postgreService.Delete();
 
-            ins = _postgreService.Insert();
+            ins = _postgreService.Insert(n);
             upd = _postgreService.Update();
             sel = _postgreService.GetAll();
             del = _postgreService.Delete();
@@ -116,7 +116,7 @@ namespace DataBase_Test.Pages
             {
                 DBoperation = name,
                 //Cpu = result.Cpu,
-                Memory = result.Memory/ 1024 ^ 2,
+                Memory = result.Memory/( 1024 ^ 2),
                 Time = result.Time
             };
              return usage;

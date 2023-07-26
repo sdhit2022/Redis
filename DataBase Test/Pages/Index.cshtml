@@ -5,7 +5,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Result(time)</h1>
+    <h1 class="display-4">@Model.n rows</h1>
+</div> 
+
+<div class="text-center">
+    <h2 class="display-4">Result(time)</h2>
 </div>
 
 <table id="dataTable_1" class="table table-hover table-bordered cell-border row-border" style="width:100%">
@@ -34,13 +38,13 @@
  </table>
  <hr />
 <div class="text-center">
-    <h1 class="display-4">SQL Server (CRUD)</h1>
+    <h2 class="display-4">SQL Server (CRUD)</h2>
 </div>
 <table id="dataTable_sqlServer" class="table table-hover table-bordered cell-border row-border" style="width:100%">
     <thead>
         <tr>
             <th>Operation</th>
-            <th>RAM usage</th>
+            <th>RAM usage(m)</th>
             @*<th>CPU usage</th>*@
             <th>Time(ms)</th>
         </tr>
@@ -65,13 +69,13 @@
  <hr />
 
 <div class="text-center">
-    <h1 class="display-4">MySQL (CRUD)</h1>
+    <h2 class="display-4">MySQL (CRUD)</h2>
 </div>
 <table id="dataTable_mySql" class="table table-hover table-bordered cell-border row-border" style="width:100%">
     <thead>
         <tr>
             <th>Operation</th>
-            <th>RAM usage</th>
+            <th>RAM usage(m)</th>
             @*<th>CPU usage</th>*@
             <th>Time(ms)</th>
         </tr>
@@ -94,13 +98,13 @@
 </table>
 <hr />
 <div class="text-center">
-    <h1 class="display-4">PostgreSQL (CRUD)</h1>
+    <h2 class="display-4">PostgreSQL (CRUD)</h2>
 </div>
 <table id="dataTable_postgreSql" class="table table-hover table-bordered cell-border row-border" style="width:100%">
     <thead>
         <tr>
             <th>Operation</th>
-            <th>RAM usage</th>
+            <th>RAM usage(m)</th>
             @*<th>CPU usage</th>*@
             <th>Time(ms)</th>
         </tr>
