@@ -1,0 +1,74 @@
+﻿@page
+@using Razor.Pages;
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.n rows</h1>
+</div>
+
+<div class="text-center">
+    <h2 class="display-4">Result(time)</h2>
+</div>
+
+<table id="dataTable_1" class="table table-hover table-bordered cell-border row-border" style="width:100%">
+    <thead>
+        <tr>
+            <th>DB</th>
+            <th>Insert</th>
+            <th>Update</th>
+            <th>Select</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @for (int i = 0; i < @Model.Tables.Count; i++)
+        {
+            <tr>
+                <td>@Model.Tables[i].DBName </td>
+                <td>@Model.Tables[i].Insert ms</td>
+                <td>@Model.Tables[i].Update ms</td>
+                <td>@Model.Tables[i].Select ms</td>
+                <td>@Model.Tables[i].Delete ms</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+<hr />
+<div class="text-center">
+    <h2 class="display-4">SQL Server (CRUD)</h2>
+</div>
+<table id="dataTable_sqlServer" class="table table-hover table-bordered cell-border row-border" style="width:100%">
+    <thead>
+        <tr>
+            <th>Operation</th>
+            <th>RAM usage(m)</th>
+            @*<th>CPU usage</th>*@
+            <th>Time(ms)</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @* @for (int i = 0; i < @Model.Tables.Count; i++)
+        {*@
+        @for (int j = 0; j < Model.Tables[0].Usage.Count; j++)
+        {
+            <tr>
+                <td>@Model.Tables[0].Usage[j].DBoperation</td>
+                <td>@Model.Tables[0].Usage[j].Memory</td>
+                @*<td>@Model.Tables[0].Usage[j].Cpu</td>*@
+                <td>@Model.Tables[0].Usage[j].Time</td>
+            </tr>
+        }
+        @* }
+        *@
+    </tbody>
+</table>
+<hr />
+
+
+<hr />
