@@ -29,7 +29,10 @@ builder.Services.AddDbContext<SQLContext>(options =>
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = "127.0.0.1:6379";
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    //prepends to all key s,when redis used by multiple applications.this 
+    //makes sure if same database uses by more than one aplications,conflict not happens
+    options.InstanceName = "Redis_";
 });
 
 var app = builder.Build();

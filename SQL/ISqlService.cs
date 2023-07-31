@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Threading;
 using Redis.Common;
 using Redis.SQL.Cache;
+using Microsoft.Extensions.Caching.Distributed;
+using Redis_Demo.Extensions;
 
 namespace Redis.SQL
 {
@@ -24,11 +26,14 @@ namespace Redis.SQL
     {
         private readonly ISQLContext _context;
         private readonly ICacheService _cacheService;
-        public SqlService(ISQLContext context,ICacheService cacheService)
+        private IDistributedCache cache;
+
+        public SqlService(ISQLContext context,ICacheService cacheService,IDistributedCache cache)
         {
             _context = context;
             _cacheService = cacheService;
             _context.Database.SetCommandTimeout(86000);
+            this.cache= cache;
 
         }
 
@@ -116,15 +121,16 @@ namespace Redis.SQL
 
         public IEnumerable<Object> GetAllCached()
         {
-            var cacheData = _cacheService.GetData<IEnumerable<Object>>("Object");
+            string recordKey = "Object_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
+            var cacheData = cache.GetRecordAsync<IEnumerable<Object>>(recordKey).Result;
             if (cacheData != null)
             {
                 return cacheData;
             }
             var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-            cacheData = _context.Objects.ToList();
-            _cacheService.SetData("Object", cacheData, expirationTime);
-            return cacheData;
+            var result = _context.Objects.ToList();
+            cache.SetRecordAsync(recordKey, result);
+            return result;
         }
 
         public void DeleteCached() 

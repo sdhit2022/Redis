@@ -14,7 +14,7 @@ namespace Razor.Pages
         //private readonly IPostgreService _postgreService;
         public List<Table> Tables { get; set; }
         public List<DBusage> Usage;
-        public int n = 1000;
+        public int n = 1000000;
 
 
 
@@ -29,26 +29,26 @@ namespace Razor.Pages
         public void OnGet()
         {
             Tables = new List<Table>();
-            var i = _sqlService.Delete();
+            //var i = _sqlService.Delete();
             Result ins, del, upd, sel;
             #region SQL
             Usage = new List<DBusage>();
-            ins = _sqlService.Insert(n);
+            //ins = _sqlService.Insert(n);
             //upd = _sqlService.Update();
-            //sel = _sqlService.GetAll();
+            sel = _sqlService.GetAll();
             //del = _sqlService.Delete();
 
-            Usage.Add(setUsage(ins, "Insert"));
+            //Usage.Add(setUsage(ins, "Insert"));
             //Usage.Add(setUsage(upd, "Update"));
-            //Usage.Add(setUsage(sel, "Select"));
+            Usage.Add(setUsage(sel, "Select"));
             //Usage.Add(setUsage(del, "Delete"));
 
             Tables.Add(new Table
             {
                 DBName = "SQL",
-                Insert = ins.Time,
+                //Insert = ins.Time,
                 //Update = upd.Time,
-                //Select = sel.Time,
+                Select = sel.Time,
                 //Delete = del.Time,
                 Usage = Usage
             });
